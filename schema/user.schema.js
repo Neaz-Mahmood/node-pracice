@@ -7,7 +7,7 @@ const isEmailValid = email =>{
     return emailParts.length<=64;
 }
 
-const userSchema = object.shape({
+const userSchema = object().shape({
     username: string()
         .min(3, 'Username must be at least 3 character long.')
         .max(50, 'Username must be at most 50 character long.')
@@ -25,10 +25,10 @@ const userSchema = object.shape({
         .required('Password is required.'),
     confirm_password: string()
         .required('This field must not be empty.')
-        .oneOf([ref(password), null], 'Passwords must match.')
+        .oneOf([ref('password'), null], 'Passwords must match.')
 });
 
-const userUpdateSchema = object.shape({
+const userUpdateSchema = object().shape({
     username: string()
         .min(3, 'Username must be at least 3 character long.')
         .max(50, 'Username must be at most 50 character long.'),

@@ -1,10 +1,9 @@
-const { validateUserRegistration, validateUserUpdate } = require("../validation/user.validate");
 const { User } = require('../models/dbmodel');
 
 
-const getUsers = async (req, res)=>{
+const getAllUsers = async (req, res)=>{
     try{
-        const users = await user.findAll();
+        const users = await User.findAll();
 
         res.status(200).send(users);
     }
@@ -35,25 +34,15 @@ const getUser = async (req, res)=>{
     }
 }
 
-const postUser = async (req, res) => {
+const createUser = async (req, res) => {
     const { username, email, password, confirm_password } = req.body;
 
     try {
-        const err = await validateUserRegistration({
-            username,
-            email,
-            phone,
-            password,
-            confirm_password,
-        });
-
-        if (err) return res.status(400).send(err);
-
-        const existUser = await User.findOne({
+         const existUser = await User.findOne({
             where: {
                 email
             }
-        })
+        });
 
         if(existUser) return res.status(400).send("Already registered with the email.")
 
@@ -71,14 +60,10 @@ const postUser = async (req, res) => {
     }
 };
 
-const putUser = async (req, res)=>{
+const updateUser = async (req, res)=>{
     try{
         const { id } = req.params;
         const { username, email} = req.body;
-
-        const err = validateUserUpdate({username, email});
-
-        if (err) return res.status(400).send(err);
 
         const user = await User.update({
             username, 
@@ -104,9 +89,6 @@ const patchUser = async (req, res)=>{
         const { id } = req.params;
         const { username, email} = req.body;
 
-        const err = validateUserUpdate({username, email});
-
-        if (err) return res.status(400).send(err);
 
         const user = await User.findOne({
             where: {
@@ -148,9 +130,9 @@ const deleteUser = async (req, res)=>{
     }
 }
 
-module.exports.getUsers = getUsers;
+module.exports.getAllUsers = getAllUsers;
 module.exports.getUser = getUser;
-module.exports.postUser = postUser;
-module.exports.putUser = putUser;
+module.exports.createUser = createUser;
+module.exports.updateUser = updateUser;
 module.exports.patchUser = patchUser;
 module.exports.deleteUser = deleteUser;

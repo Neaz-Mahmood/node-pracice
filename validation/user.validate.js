@@ -1,24 +1,19 @@
-const { userSchema, userUpdateSchema } = require('../schema/user.schema');
-
-const validateUserRegistration = async user => {
+const validation  =  (schema) => async ( req, res, next ) => {
     try{
-        await userSchema.validate(user);
-        return null;
+        await schema.validate(req.body, {abortEarly: false});
+        next();
     }
-    catch (err){
-        return err.errors[0];
+    catch (error){
+        const errors = [];
+        error.inner.forEach(err => {
+            const isPathExists = errors.find(e=> e.path === err.path);
+            if(!isPathExists){
+                errors.push({ path: err.path, massage: err.massage});
+            }
+        });
+        return res.status(400).send(errors);
     }
 }
 
-const validateUserUpdate = async user => {
-    try{
-        await userUpdateSchema.validate(user);
-        return null;
-    }
-    catch (err){
-        return err.errors[0];
-    }
-}
 
-module.exports.validateUserRegistration = validateUserRegistration;
-module.exports.validateUserUpdate = validateUserUpdate;
+module.exports = validation;

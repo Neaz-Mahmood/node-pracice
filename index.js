@@ -1,5 +1,5 @@
  const users = require('./routes/user.routes');
- const products = require('./routes/product.routes');
+ //const products = require('./routes/product.routes');
  const express = require('express');
  const app = express();
 
@@ -7,8 +7,8 @@
  
  
 
-app.use('api/users/', users);
-app.use('api/products/', products);
+app.use('/api/users/', users);
+//app.use('api/products/', products);
 
 app.get('/', (req, res)=>{
    res.status(200).send("Server is running...")
